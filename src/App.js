@@ -1,27 +1,60 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+
+import Task from './Task';
 import './App.css';
 
 class App extends Component {
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      newTask: "",
+      tasks: []
+    };
+  }
+
+  handleChange(e) {
+    this.setState({
+      newTask: e.target.value
+    })
+  }
+
+  addTask(e) {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (!this.state.newTask) {
+      return;
+    }
+
+    const newTask = {
+      name: this.state.newTask
+    };
+
+    this.setState({
+      newTask: "",
+      tasks: this.state.tasks.concat(newTask)
+    })
+  }
+
+
   render() {
     return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit Bitch <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
-      </div>
+      <React.Fragment>
+
+        <form onSubmit={(e) => this.addTask(e)}>
+          <input onChange={(e) => this.handleChange(e)} value={this.state.newTask}/>
+          <button type="submit">
+            Submit
+          </button>
+        </form>
+
+
+        {this.state.tasks.map( (task, i) => <Task key={i} name={task.name} />)}
+      </React.Fragment>
     );
+
   }
 }
 
