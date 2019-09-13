@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import Task from './Task';
 import ValidDate from './validDate'
+import HashHelper from './HashHelper'
 import './App.css';
 
 class App extends Component {
@@ -12,7 +13,8 @@ class App extends Component {
     this.state = {
       newTask: {
         name: "",
-        date: this.currentDateString
+        date: this.currentDateString,
+        id: ""
       },
       tasks: []
     };
@@ -60,19 +62,32 @@ class App extends Component {
       return;
     }
 
+    let newId = HashHelper(this.state.newTask.name, this.state.newTask.date);
+
     const newTask = {
       name: this.state.newTask.name,
-      date: this.state.newTask.date
+      date: this.state.newTask.date,
+      id: newId
     };
 
     this.setState({
       newTask: {
         name: "",
-        date: this.currentDateString
+        date: this.currentDateString,
+        id: ""
       },
 
       tasks: this.state.tasks.concat(newTask)
     })
+  }
+
+  handleDelete(taskId) {
+    let newTasks = this.state.tasks.filter(task => task.id != taskId);
+    this.setState(
+      prevState => ({
+        tasks: newTasks
+      })
+    )
   }
 
   render() {
@@ -91,10 +106,9 @@ class App extends Component {
               Submit
             </button>
           </form>
-
-          {this.state.tasks.map((task, i) => <Task key={i} name={task.name} date={task.date}/>)}
+          {/*key = {i} is undefined because map is asynchronous so you're not even setting the key at the right time*/}
+          {this.state.tasks.map((task) => <Task name={task.name} id = {task.id} date={task.date} delete={(id) => this.handleDelete(id)}/>)}
         </React.Fragment>
-      // </div>
     );
 
   }

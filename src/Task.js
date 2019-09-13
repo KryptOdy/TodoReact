@@ -6,7 +6,7 @@ class Task extends React.Component {
             <div>
                 <h1>{this.props.name}</h1>
                 <h5>Due Date: {this.props.date}</h5>
-                <button>Delete Task</button>
+                <button onClick={() => this.props.delete(this.props.id)}>Delete Task</button>
             </div>
         );
     }
